@@ -131,5 +131,18 @@ function closeModal() {
     document.getElementById('student-modal').style.display = 'none';
 }
 
-// Initial Boostrap
-window.onload = () => showSection('overview');
+// Initial Bootstrap based on page
+window.onload = () => {
+    const page = window.location.pathname.split('/').pop().toLowerCase();
+    
+    if(page === 'student.html') {
+        console.log('Student Portal Active');
+        // Student specific dynamic logic if needed
+    } else if(page === 'faculty.html') {
+        console.log('Faculty Portal Active');
+        // Faculty specific dynamic logic
+    } else {
+        // Default Admin Hub logic
+        showSection('overview');
+    }
+};
