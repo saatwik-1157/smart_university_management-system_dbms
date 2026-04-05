@@ -1,0 +1,137 @@
+/* Premium Interactive Presentation Styles */
+:root {
+    --bg-dark: #020617;
+    --bg-card: #1e293b;
+    --primary: #38bdf8;
+    --secondary: #818cf8;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+.presentation {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+.slide {
+    min-width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem;
+    text-align: center;
+    background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+    position: relative;
+}
+
+/* Slide Typography */
+h1 {
+    font-size: 5rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -2px;
+}
+
+h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--primary);
+}
+
+p {
+    font-size: 1.5rem;
+    color: var(--muted);
+    max-width: 800px;
+}
+
+ul {
+    list-style: none;
+    text-align: left;
+    font-size: 1.5rem;
+    line-height: 1.6;
+}
+
+li {
+    margin-bottom: 1rem;
+    position: relative;
+    padding-left: 2rem;
+}
+
+li::before {
+    content: "•";
+    color: var(--primary);
+    position: absolute;
+    left: 0;
+    font-size: 2rem;
+}
+
+/* Navigation Controls */
+.controls {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 1rem;
+    z-index: 100;
+}
+
+.btn {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text);
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Progress Bar */
+.progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 5px;
+    background: var(--primary);
+    width: 0%;
+    transition: 0.3s;
+    z-index: 101;
+}
+
+/* Slide Specific Styles */
+.slide-number {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 1.25rem;
+    color: var(--muted);
+}

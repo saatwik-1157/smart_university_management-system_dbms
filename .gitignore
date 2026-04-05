@@ -1,0 +1,11 @@
+# VITAP Smart University DBMS Project - Gitignore
+.git/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+Thumbs.db
+node_modules/
+.vscode/
+.idea/
+*.log

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITAP SUMS | Mega-Scale Presentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --bg-card: rgba(30, 41, 59, 0.8);
+            --primary: #38bdf8;
+            --secondary: #818cf8;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg-dark);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .presentation {
+            height: 100vh;
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5rem;
+            text-align: center;
+            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+            position: relative;
+        }
+
+        h1 { font-size: 6rem; font-weight: 800; margin-bottom: 1.5rem; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -3px; }
+        h2 { font-size: 4rem; font-weight: 700; margin-bottom: 2rem; color: var(--primary); }
+        h3 { font-size: 2rem; color: var(--muted); margin-bottom: 3rem; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; text-align: left; width: 80%; }
+        .feature-card { background: var(--bg-card); padding: 2rem; border-radius: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
+        .feature-card i { font-size: 2rem; color: var(--primary); margin-bottom: 1rem; }
+        .feature-card h4 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .feature-card p { font-size: 1rem; color: var(--muted); }
+
+        .progress-indicator { position: fixed; bottom: 0; left: 0; height: 6px; background: var(--primary); width: 0%; transition: 0.4s; z-index: 100; }
+        .nav-hints { position: fixed; bottom: 2rem; right: 2rem; color: var(--muted); font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="presentation" id="presentation">
+        <!-- Slide 1: Title VITAP -->
+        <div class="slide">
+            <h1>VITAP SUMS</h1>
+            <h2>Mega-Scale Enterprise DBMS</h2>
+            <h3>Empowering 1,000+ Students & 100+ Staff</h3>
+            <div style="margin-top: 3rem;">
+                <p style="font-weight: 700;">V.Saatwik Sairaam (24MIC 7131)</p>
+                <p style="color: var(--muted);">VITAP University | 2026</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Data Scaling -->
+        <div class="slide">
+            <h2>Massive Data Integrity</h2>
+            <div class="grid-2">
+                <div class="feature-card">
+                    <i class="fas fa-users-cog"></i>
+                    <h4>1,100+ Live Entities</h4>
+                    <p>Generated via custom Python expansion for realistic testing.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-database"></i>
+                    <h4>ACID Compliant Engine</h4>
+                    <p>Interconnected 15-table relational schema with strict indexing.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Enterprise Features -->
+        <div class="slide">
+            <h2>The "Smart" Intelligence</h2>
+            <div class="grid-2">
+                <div class="feature-card">
+                    <i class="fas fa-brain"></i>
+                    <h4>AI Predictor</h4>
+                    <p>Analyzes historical performance for student success projection.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h4>Campus Explorer</h4>
+                    <p>Live occupancy monitoring for major building blocks.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Automation -->
+        <div class="slide">
+            <h2>Logic & Automation</h2>
+            <div class="grid-2">
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h4>Real-time Triggers</h4>
+                    <p>Automated fine calculation and infrastructure maintenance logs.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h4>Graduation Engine</h4>
+                    <p>Audit procedures for student degree requirement tracking.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Thank You -->
+        <div class="slide">
+            <h1>VITAP SUMS</h1>
+            <h2>Excellence in Administration</h2>
+            <p style="margin-top: 2rem;">V.Saatwik Sairaam (24MIC 7131)</p>
+            <p style="color: var(--muted);">VITAP University Professional Presentation</p>
+        </div>
+    </div>
+
+    <div class="progress-indicator" id="progress"></div>
+    <div class="nav-hints">Use Arrow Keys or Click to navigate</div>
+
+    <script>
+        let slide = 0;
+        const deck = document.getElementById('presentation');
+        const bar = document.getElementById('progress');
+        const count = document.querySelectorAll('.slide').length;
+
+        function update() {
+            deck.style.transform = `translateX(-${slide * 100}vw)`;
+            bar.style.width = `${((slide + 1)/count)*100}%`;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowRight' || e.key === ' ') { if(slide < count-1) { slide++; update(); } }
+            if(e.key === 'ArrowLeft') { if(slide > 0) { slide--; update(); } }
+        });
+
+        window.onclick = () => { if(slide < count-1) { slide++; update(); } };
+        update();
+    </script>
+</body>
+</html>
