@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITAP Student Portal | Enterprise Academic Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Student Sidebar -->
+    <nav class="sidebar">
+        <div class="logo-container">
+            <div class="logo">VITAP Student</div>
+            <div style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.5); margin-top: 0.5rem;">Academic Excellence Suite</div>
+        </div>
+        
+        <ul class="nav-links">
+            <li class="nav-item active"><i class="fas fa-columns"></i> Dashboard</li>
+            <li class="nav-item"><i class="fas fa-book-reader"></i> My Courses</li>
+            <li class="nav-item"><i class="fas fa-chart-pie"></i> Grade History</li>
+            <li class="nav-item"><i class="fas fa-calendar-check"></i> Attendance</li>
+            <li class="nav-item"><i class="fas fa-file-invoice"></i> Fees & Payments</li>
+        </ul>
+
+        <div style="margin-top: auto;">
+            <div class="profile-pill">
+                <div class="avatar">AG</div>
+                <div>
+                    <div style="font-weight: 700;">Alice Green</div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted);">ID: #VITAP201</div>
+                </div>
+            </div>
+            <a href="index.html" style="display: block; margin-top: 1.5rem; text-decoration: none; color: rgba(255, 255, 255, 0.4); font-size: 0.75rem;"><i class="fas fa-sign-out-alt"></i> Logout to Admin</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <header>
+            <div class="header-title">
+                <h1>Welcome Back, Alice!</h1>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Computer Science & Engineering | Semester 4</p>
+            </div>
+            <div class="header-right">
+                <button class="btn" onclick="alert('Generating Professional Transcript...')"><i class="fas fa-file-download"></i> Download Transcript (PDF)</button>
+            </div>
+        </header>
+
+        <!-- Dynamic Overview Cards -->
+        <div class="portal-grid">
+            <div class="p-card">
+                <i class="fas fa-star"></i>
+                <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Cumulative GPA</div>
+                <div style="font-size: 2.5rem; font-weight: 800; color: var(--acc-primary);">3.92</div>
+                <div style="font-size: 0.8rem; color: var(--acc-success); margin-top: 0.5rem;"><i class="fas fa-arrow-up"></i> +0.05 from last sem</div>
+            </div>
+
+            <div class="p-card">
+                <i class="fas fa-clock"></i>
+                <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Attendance Record</div>
+                <div style="font-size: 2.5rem; font-weight: 800; color: var(--acc-primary);">94.5%</div>
+                <div class="capacity-bar" style="height: 6px; margin-top: 1rem;"><div class="capacity-fill" style="width: 94.5%;"></div></div>
+            </div>
+
+            <div class="p-card">
+                <i class="fas fa-graduation-cap"></i>
+                <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Credit Milestone</div>
+                <div style="font-size: 2.5rem; font-weight: 800; color: var(--acc-primary);">86 / 120</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">72% of degree complete</div>
+            </div>
+        </div>
+
+        <div class="table-container" style="margin-top: 3rem;">
+            <div style="padding: 1.5rem; font-weight: 700; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between;">
+                Current Semester Grades (Sem 4)
+                <span style="font-weight: 400; color: var(--text-muted); font-size: 0.8rem;">Live Updates</span>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Course Code</th><th>Course Name</th><th>Credits</th><th>Attendance</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>CSE4001</strong></td><td>Advanced Database Management</td><td>4</td><td>98%</td><td><span style="color: var(--acc-success)">Excellent</span></td></tr>
+                    <tr><td><strong>CSE4002</strong></td><td>Distributed Computing</td><td>3</td><td>92%</td><td><span style="color: var(--acc-success)">Good</span></td></tr>
+                    <tr><td><strong>MAT2001</strong></td><td>Applied Probability</td><td>4</td><td>90%</td><td><span style="color: var(--acc-primary)">Steady</span></td></tr>
+                    <tr><td><strong>STS4001</strong></td><td>Soft Skills & Career Prep</td><td>1</td><td>100%</td><td><span style="color: var(--acc-success)">Perfect</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+</body>
+</html>
