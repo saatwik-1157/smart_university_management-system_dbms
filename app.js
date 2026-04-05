@@ -1,4 +1,5 @@
-/* VITAP Enterprise V3 - Unified Logic Engine */
+/* VITAP Enterprise Unified Master Hub Logic (Consolidated V3) */
+
 const universityDB = {
     students: Array.from({ length: 1000 }, (_, i) => ({
         id: 201 + i,
@@ -17,72 +18,122 @@ const universityDB = {
         dept: ['Computer Science', 'Electrical Engineering', 'Mechanical Engineering', 'Business Administration'][i % 4],
         rank: ['Professor', 'Associate Professor', 'Assistant Professor', 'Lecturer'][i % 4],
         status: i % 3 === 0 ? 'In Lecture' : 'Office Hours'
-    }))
+    })),
+    slides: [
+        { title: "VITAP SUMS", subtitle: "Mega-Scale Enterprise DBMS", desc: "Empowering 1,000+ Students & 100+ Staff", footer: "V.Saatwik Sairaam (24MIC 7131) | 2026" },
+        { title: "Mega-Scale Expansion", subtitle: "1,100+ Live Entities", desc: "Successfully scaled the relational database from 10 to 1,000+ student records with zero latency.", footer: "DB Architecture: V.Saatwik Sairaam" },
+        { title: "Triple-Portal Ecosystem", subtitle: "Unified Admin, Faculty, & Student Portals", desc: "Each portal tailored with specific analytic views, GPA history, and workload tracking.", footer: "Enterprise V3 Master Build" },
+        { title: "Smart Intelligence", subtitle: "AI Analytics & Mapping", desc: "Mock AI predictors and real-time campus occupancy tracking across major building blocks.", footer: "DBMS Final Presentation" }
+    ]
 };
 
 let currentView = 'overview';
+let activeRole = 'admin';
 let searchQuery = '';
+let currentSlide = 0;
 
-function showSection(section) {
-    const area = document.getElementById('content-area');
-    const pageTitle = document.getElementById('page-title');
-    const pageDesc = document.getElementById('page-desc');
-    const stats = document.getElementById('overview-stats');
+function switchPortal(role) {
+    activeRole = role;
+    const roleTag = document.getElementById('active-role-tag');
+    const roleNav = document.getElementById('master-nav');
+    
+    if(role === 'admin') {
+        roleTag.innerText = 'ADMIN COMMAND CENTER';
+        roleTag.style.color = '#1d4ed8';
+        roleNav.innerHTML = `
+            <li class="nav-item active" onclick="renderView('overview')"><i class="fas fa-chart-line"></i> Dashboard</li>
+            <li class="nav-item" onclick="renderView('academic')"><i class="fas fa-graduation-cap"></i> Student Registry</li>
+            <li class="nav-item" onclick="renderView('faculty')"><i class="fas fa-user-tie"></i> Staff Directory</li>
+            <li class="nav-item" onclick="renderView('maintenance')"><i class="fas fa-tools"></i> Campus Hub</li>
+        `;
+        renderView('overview');
+    } else if(role === 'student') {
+        roleTag.innerText = 'STUDENT ACADEMIC PORTAL';
+        roleTag.style.color = '#10b981';
+        roleNav.innerHTML = `
+            <li class="nav-item active" onclick="renderView('student-dashboard')"><i class="fas fa-columns"></i> My Overview</li>
+            <li class="nav-item" onclick="renderView('academic')"><i class="fas fa-book-reader"></i> Coursework</li>
+        `;
+        renderView('student-dashboard');
+    } else if(role === 'faculty') {
+        roleTag.innerText = 'FACULTY MANAGEMENT SUITE';
+        roleTag.style.color = '#f59e0b';
+        roleNav.innerHTML = `
+            <li class="nav-item active" onclick="renderView('faculty-dashboard')"><i class="fas fa-chalkboard-teacher"></i> Faculty Center</li>
+            <li class="nav-item" onclick="renderView('faculty-registry')"><i class="fas fa-users"></i> Department List</li>
+        `;
+        renderView('faculty-dashboard');
+    }
+}
 
-    // Update Sidebar Active state
+function renderView(view) {
+    currentView = view;
+    const root = document.getElementById('view-container');
+    const title = document.getElementById('portal-title');
+    const desc = document.getElementById('portal-desc');
+    
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    const activeItem = document.querySelector(`[onclick="showSection('${section}')"]`);
-    if(activeItem) activeItem.classList.add('active');
-
-    // Toggle Summary Stats
-    stats.style.display = (section === 'overview') ? 'grid' : 'none';
+    document.querySelectorAll('.p-card-overview').forEach(c => c.style.display = 'none');
 
     let html = '';
-    switch(section) {
+    switch(view) {
+        case 'overview':
+            title.innerText = 'University Command Hub';
+            desc.innerText = 'Real-time oversight for VITAP infrastructure.';
+            html = renderStats();
+            break;
         case 'academic':
-            pageTitle.innerText = 'Student Registry';
-            pageDesc.innerText = 'Administrative view of 1,000+ enrolled students.';
+            title.innerText = 'Administrative Registry';
+            desc.innerText = 'Managing 1,000+ Enrolled Students.';
             html = renderTable('students', universityDB.students);
             break;
-        case 'faculty':
-            pageTitle.innerText = 'Faculty Directory';
-            pageDesc.innerText = 'Global list of 100+ academic staff members.';
-            html = renderTable('faculty', universityDB.faculty);
-            break;
-        case 'placements':
-            pageTitle.innerText = 'Career Center';
-            pageDesc.innerText = 'Tracking corporate hiring cycles and packages.';
-            html = `<div class="p-card"><h4 style="margin-bottom: 1rem;">Recruitment 2026</h4><p style="color: var(--text-muted)">VITAP has achieved a 75.2% placement rate for the current cycle. Top recruiters: Google, Amazon, Tesla.</p></div>`;
-            break;
-        case 'maintenance':
-            pageTitle.innerText = 'Campus Infrastructure';
-            pageDesc.innerText = 'Managing building occupancy and repairs.';
+        case 'student-dashboard':
+            title.innerText = 'My Academic Dashboard';
+            desc.innerText = 'Alice Green | Semester 4 | CSE';
             html = `
                 <div class="portal-grid">
-                    <div class="p-card"><h5>ab1 newton hall</h5><p>82% Occupancy</p></div>
-                    <div class="p-card"><h5>physics lab ab1</h5><p>45% Occupancy</p></div>
-                    <div class="p-card"><h5>Tesla Block</h5><p>95% Occupancy</p></div>
+                    <div class="p-card"><h3>GPA</h3><p style="font-size: 2rem; color: var(--acc-primary);">3.92</p></div>
+                    <div class="p-card"><h3>Attendance</h3><p style="font-size: 2rem; color: var(--acc-primary);">94.5%</p></div>
+                    <div class="p-card"><h3>Progress</h3><p style="font-size: 2rem; color: var(--acc-primary);">72%</p></div>
+                </div>
+                <button class="btn" style="margin-top: 2rem;" onclick="alert('PDF Transcript Generated!')">Download Final Transcript</button>
+            `;
+            break;
+        case 'faculty-dashboard':
+            title.innerText = 'Faculty Academic Center';
+            desc.innerText = 'Prof. Robert Williams | CSE';
+            html = `
+                <div class="portal-grid">
+                    <div class="p-card"><h3>Students</h3><p style="font-size: 2rem; color: var(--acc-primary);">142</p></div>
+                    <div class="p-card"><h3>Marking</h3><p style="font-size: 2rem; color: var(--acc-primary);">82% Done</p></div>
+                    <div class="p-card"><h3>Reseach</h3><p style="font-size: 2rem; color: var(--acc-primary);">42 / 50</p></div>
                 </div>
             `;
             break;
         default:
-            pageTitle.innerText = 'Executive Command Center';
-            pageDesc.innerText = 'Real-time management for VITAP\'s 1,100+ members.';
-            html = `<div class="p-card"><h4>Welcome Back, Administrator.</h4><p style="color: var(--text-muted); margin-top: 1rem;">System health is 100%. All portals (Student, Faculty, Admin) are currently synchronized with the database.</p></div>`;
+            html = `<div class="p-card">View Under Construction</div>`;
     }
-    area.innerHTML = html;
+    root.innerHTML = html;
+}
+
+function renderStats() {
+    return `
+        <div class="portal-grid animate-fade">
+            <div class="p-card"><i class="fas fa-users"></i><h4>Enrollment</h4><p>1,000</p></div>
+            <div class="p-card"><i class="fas fa-chalkboard-teacher"></i><h4>Staff</h4><p>100</p></div>
+            <div class="p-card"><i class="fas fa-building"></i><h4>Occupancy</h4><p>84%</p></div>
+            <div class="p-card"><i class="fas fa-briefcase"></i><h4>Placed</h4><p>75.2%</p></div>
+        </div>
+    `;
 }
 
 function renderTable(type, data) {
     const filtered = data.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 50);
     return `
-        <div class="table-container animate-fade">
-            <div style="padding: 1rem; border-bottom: 1px solid var(--border-light); font-weight: 700;">
-                Showing top 50 records for ${type.charAt(0).toUpperCase() + type.slice(1)}
-            </div>
+        <div class="table-container animate-fade" style="margin-top: 2rem;">
             <table>
                 <thead>
-                    ${type === 'students' ? '<tr><th>Name</th><th>Email</th><th>GPA</th><th>Status</th><th>Action</th></tr>' : '<tr><th>Name</th><th>Email</th><th>Rank</th><th>Status</th><th>Workload</th></tr>'}
+                    <tr><th>Name</th><th>Email</th><th>${type === 'students' ? 'GPA' : 'Rank'}</th><th>Status</th><th>Audit</th></tr>
                 </thead>
                 <tbody>
                     ${filtered.map(item => `
@@ -90,8 +141,8 @@ function renderTable(type, data) {
                             <td><strong>${item.name}</strong></td>
                             <td>${item.email}</td>
                             <td>${type === 'students' ? item.gpa : item.rank}</td>
-                            <td><span style="color: ${item.status === 'On Probation' ? 'var(--acc-danger)' : 'var(--acc-primary)'}">${item.status}</span></td>
-                            <td>${type === 'students' ? `<button class="btn" style="padding: 4px 12px; font-size: 10px;" onclick="openAudit(${item.id})">AUDIT</button>` : '4 Courses'}</td>
+                            <td><span style="color: var(--acc-primary)">${item.status}</span></td>
+                            <td><button class="btn" style="padding: 4px 12px; font-size: 10px;" onclick="openAudit(${item.id})">AUDIT</button></td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -102,47 +153,43 @@ function renderTable(type, data) {
 
 function handleSearch() {
     searchQuery = document.getElementById('global-search').value;
-    const activeSection = document.querySelector('.nav-item.active').innerText.toLowerCase();
-    if(activeSection.includes('student')) showSection('academic');
-    else if(activeSection.includes('faculty')) showSection('faculty');
+    if(currentView === 'academic') renderView('academic');
 }
 
 function openAudit(id) {
-    const student = universityDB.students.find(s => s.id === id);
-    const modal = document.getElementById('student-modal');
-    const body = document.getElementById('modal-body');
-
-    body.innerHTML = `
-        <h2 style="color: var(--acc-primary); margin-bottom: 1rem;">Administrative Audit</h2>
-        <h3 style="margin-bottom: 2rem;">${student.name} (#VITAP${student.id})</h3>
-        <div style="text-align: left; background: #f8fafc; padding: 1.5rem; border-radius: 1rem;">
-            <p><strong>Department:</strong> ${student.dept}</p>
-            <p><strong>Email:</strong> ${student.email}</p>
-            <p><strong>GPA:</strong> ${student.gpa}</p>
-            <p><strong>Attendance:</strong> ${student.attendance}%</p>
-            <p style="margin-top: 1rem;"><strong>Academic Standing:</strong> ${student.status}</p>
-        </div>
-        <button class="btn" style="width: 100%; margin-top: 2rem; background: var(--bg-navy);" onclick="alert('PDF Transcript Generated successfully!')">Generate Official Transcript (PDF)</button>
+    const s = universityDB.students.find(x => x.id === id);
+    document.getElementById('audit-content').innerHTML = `
+        <h2>${s.name} (#VITAP${s.id})</h2>
+        <p style="margin: 1rem 0;">Dept: ${s.dept} | GPA: ${s.gpa}</p>
+        <div class="capacity-bar"><div class="capacity-fill" style="width: ${s.progress}%"></div></div>
     `;
-    modal.style.display = 'flex';
+    document.getElementById('audit-modal').style.display = 'flex';
 }
 
-function closeModal() {
-    document.getElementById('student-modal').style.display = 'none';
+function closeAudit() { document.getElementById('audit-modal').style.display = 'none'; }
+
+/* Presentation Logic */
+function togglePresentation(on) {
+    const layer = document.getElementById('presentation-layer');
+    layer.style.display = on ? 'flex' : 'none';
+    if(on) showSlide(0);
 }
 
-// Initial Bootstrap based on page
-window.onload = () => {
-    const page = window.location.pathname.split('/').pop().toLowerCase();
-    
-    if(page === 'student.html') {
-        console.log('Student Portal Active');
-        // Student specific dynamic logic if needed
-    } else if(page === 'faculty.html') {
-        console.log('Faculty Portal Active');
-        // Faculty specific dynamic logic
-    } else {
-        // Default Admin Hub logic
-        showSection('overview');
-    }
-};
+function showSlide(index) {
+    currentSlide = index;
+    const slide = universityDB.slides[index];
+    const container = document.getElementById('presentation-slides');
+    container.innerHTML = `
+        <div class="slide-content animate-fade">
+            <h1 class="slide-title">${slide.title}</h1>
+            <h2 class="slide-subtitle">${slide.subtitle}</h2>
+            <p class="slide-desc">${slide.desc}</p>
+            <div class="slide-footer">${slide.footer}</div>
+        </div>
+    `;
+}
+
+function nextSlide() { if(currentSlide < universityDB.slides.length - 1) showSlide(currentSlide + 1); else togglePresentation(false); }
+function prevSlide() { if(currentSlide > 0) showSlide(currentSlide - 1); }
+
+window.onload = () => switchPortal('admin');
