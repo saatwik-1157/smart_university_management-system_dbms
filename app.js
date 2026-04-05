@@ -1,4 +1,4 @@
-/* VITAP Enterprise Unified Master Hub Logic (Consolidated V3) */
+/* VITAP Enterprise Unified Master Hub Logic (Graphics Edition) */
 
 const universityDB = {
     students: Array.from({ length: 1000 }, (_, i) => ({
@@ -21,9 +21,9 @@ const universityDB = {
     })),
     slides: [
         { title: "VITAP SUMS", subtitle: "Mega-Scale Enterprise DBMS", desc: "Empowering 1,000+ Students & 100+ Staff", footer: "V.Saatwik Sairaam (24MIC 7131) | 2026" },
+        { title: "Visual Analytics", subtitle: "Real-Time DBMS Graphics", desc: "Interactive Chart.js visualizations for massive data analysis.", footer: "Graphic Engine: V.Saatwik Sairaam" },
         { title: "Mega-Scale Expansion", subtitle: "1,100+ Live Entities", desc: "Successfully scaled the relational database from 10 to 1,000+ student records with zero latency.", footer: "DB Architecture: V.Saatwik Sairaam" },
-        { title: "Triple-Portal Ecosystem", subtitle: "Unified Admin, Faculty, & Student Portals", desc: "Each portal tailored with specific analytic views, GPA history, and workload tracking.", footer: "Enterprise V3 Master Build" },
-        { title: "Smart Intelligence", subtitle: "AI Analytics & Mapping", desc: "Mock AI predictors and real-time campus occupancy tracking across major building blocks.", footer: "DBMS Final Presentation" }
+        { title: "Triple-Portal Ecosystem", subtitle: "Unified Admin, Faculty, & Student Portals", desc: "Each portal tailored with specific analytic views, GPA history, and workload tracking.", footer: "Enterprise V3 Master Build" }
     ]
 };
 
@@ -31,6 +31,7 @@ let currentView = 'overview';
 let activeRole = 'admin';
 let searchQuery = '';
 let currentSlide = 0;
+let charts = {};
 
 function switchPortal(role) {
     activeRole = role;
@@ -73,14 +74,22 @@ function renderView(view) {
     const desc = document.getElementById('portal-desc');
     
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    document.querySelectorAll('.p-card-overview').forEach(c => c.style.display = 'none');
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => { if(item.innerText.toLowerCase().includes(view.replace('-', ' '))) item.classList.add('active'); });
 
     let html = '';
     switch(view) {
         case 'overview':
             title.innerText = 'University Command Hub';
-            desc.innerText = 'Real-time oversight for VITAP infrastructure.';
-            html = renderStats();
+            desc.innerText = 'Real-time overview of university metrics.';
+            html = `
+                <div class="portal-grid">${renderStatCards()}</div>
+                <div class="portal-grid" style="margin-top: 2rem;">
+                    <div class="p-card"><h4>Enrollment Trend</h4><canvas id="chart-enrollment"></canvas></div>
+                    <div class="p-card"><h4>Department GPA Comparison</h4><canvas id="chart-dept"></canvas></div>
+                </div>
+            `;
+            setTimeout(() => initOverviewCharts(), 100);
             break;
         case 'academic':
             title.innerText = 'Administrative Registry';
@@ -92,21 +101,21 @@ function renderView(view) {
             desc.innerText = 'Alice Green | Semester 4 | CSE';
             html = `
                 <div class="portal-grid">
-                    <div class="p-card"><h3>GPA</h3><p style="font-size: 2rem; color: var(--acc-primary);">3.92</p></div>
-                    <div class="p-card"><h3>Attendance</h3><p style="font-size: 2rem; color: var(--acc-primary);">94.5%</p></div>
-                    <div class="p-card"><h3>Progress</h3><p style="font-size: 2rem; color: var(--acc-primary);">72%</p></div>
+                    <div class="p-card"><h3>GPA</h3><p style="font-size: 2.5rem; color: var(--acc-primary); font-weight: 800;">3.92</p></div>
+                    <div class="p-card"><h3>Attendance</h3><p style="font-size: 2.5rem; color: #10b981; font-weight: 800;">94.5%</p></div>
+                    <div class="p-card"><h3>Progress</h3><p style="font-size: 2.5rem; color: #f59e0b; font-weight: 800;">72%</p></div>
                 </div>
-                <button class="btn" style="margin-top: 2rem;" onclick="alert('PDF Transcript Generated!')">Download Final Transcript</button>
+                <div class="p-card" style="margin-top: 2rem;"><h4>My GPA Progress</h4><canvas id="chart-student-gpa"></canvas></div>
             `;
+            setTimeout(() => initStudentChart(), 100);
             break;
         case 'faculty-dashboard':
             title.innerText = 'Faculty Academic Center';
             desc.innerText = 'Prof. Robert Williams | CSE';
             html = `
                 <div class="portal-grid">
-                    <div class="p-card"><h3>Students</h3><p style="font-size: 2rem; color: var(--acc-primary);">142</p></div>
-                    <div class="p-card"><h3>Marking</h3><p style="font-size: 2rem; color: var(--acc-primary);">82% Done</p></div>
-                    <div class="p-card"><h3>Reseach</h3><p style="font-size: 2rem; color: var(--acc-primary);">42 / 50</p></div>
+                    <div class="p-card"><h3>Total Students</h3><p style="font-size: 2.5rem; color: var(--acc-primary); font-weight: 800;">142</p></div>
+                    <div class="p-card"><h3>Marking Status</h3><p style="font-size: 2.5rem; color: #10b981; font-weight: 800;">82%</p></div>
                 </div>
             `;
             break;
@@ -116,15 +125,36 @@ function renderView(view) {
     root.innerHTML = html;
 }
 
-function renderStats() {
+function renderStatCards() {
     return `
-        <div class="portal-grid animate-fade">
-            <div class="p-card"><i class="fas fa-users"></i><h4>Enrollment</h4><p>1,000</p></div>
-            <div class="p-card"><i class="fas fa-chalkboard-teacher"></i><h4>Staff</h4><p>100</p></div>
-            <div class="p-card"><i class="fas fa-building"></i><h4>Occupancy</h4><p>84%</p></div>
-            <div class="p-card"><i class="fas fa-briefcase"></i><h4>Placed</h4><p>75.2%</p></div>
-        </div>
+        <div class="p-card"><i class="fas fa-users"></i><h4>Enrollment</h4><p style="font-size: 1.5rem; font-weight: 800;">1,000</p></div>
+        <div class="p-card"><i class="fas fa-chalkboard-teacher"></i><h4>Staff</h4><p style="font-size: 1.5rem; font-weight: 800;">100</p></div>
+        <div class="p-card"><i class="fas fa-building"></i><h4>Occupancy</h4><p style="font-size: 1.5rem; font-weight: 800;">84%</p></div>
+        <div class="p-card"><i class="fas fa-briefcase"></i><h4>Placed</h4><p style="font-size: 1.5rem; font-weight: 800; color: var(--acc-primary);">75.2%</p></div>
     `;
+}
+
+function initOverviewCharts() {
+    const ctx1 = document.getElementById('chart-enrollment').getContext('2d');
+    const ctx2 = document.getElementById('chart-dept').getContext('2d');
+
+    charts.enrollment = new Chart(ctx1, {
+        type: 'line',
+        data: { labels: ['2021', '2022', '2023', '2024', '2025', '2026'], datasets: [{ label: 'Students', data: [150, 320, 580, 840, 950, 1000], borderColor: '#1d4ed8', tension: 0.4 }] }
+    });
+
+    charts.dept = new Chart(ctx2, {
+        type: 'bar',
+        data: { labels: ['CS', 'Electrical', 'Mechanical', 'Business'], datasets: [{ label: 'Avg GPA', data: [3.6, 3.2, 3.4, 3.5], backgroundColor: ['#1d4ed8', '#3b82f6', '#60a5fa', '#93c5fd'] }] }
+    });
+}
+
+function initStudentChart() {
+    const ctx = document.getElementById('chart-student-gpa').getContext('2d');
+    charts.studentGpa = new Chart(ctx, {
+        type: 'line',
+        data: { labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'], datasets: [{ label: 'GPA', data: [3.4, 3.6, 3.8, 3.92], borderColor: '#10b981', fill: true, backgroundColor: 'rgba(16, 185, 129, 0.1)' }] }
+    });
 }
 
 function renderTable(type, data) {
@@ -168,7 +198,6 @@ function openAudit(id) {
 
 function closeAudit() { document.getElementById('audit-modal').style.display = 'none'; }
 
-/* Presentation Logic */
 function togglePresentation(on) {
     const layer = document.getElementById('presentation-layer');
     layer.style.display = on ? 'flex' : 'none';
@@ -181,7 +210,7 @@ function showSlide(index) {
     const container = document.getElementById('presentation-slides');
     container.innerHTML = `
         <div class="slide-content animate-fade">
-            <h1 class="slide-title">${slide.title}</h1>
+            <h1 class="slide-title" style="font-size: 4rem;">${slide.title}</h1>
             <h2 class="slide-subtitle">${slide.subtitle}</h2>
             <p class="slide-desc">${slide.desc}</p>
             <div class="slide-footer">${slide.footer}</div>
