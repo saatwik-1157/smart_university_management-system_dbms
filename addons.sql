@@ -53,7 +53,7 @@ CREATE TABLE RoomAllocations (
     RoomNumber VARCHAR(10),
     AllocationDate DATE DEFAULT (CURRENT_DATE),
     Status ENUM('Active', 'Vacated') DEFAULT 'Active',
-    UNIQUE(StudentID, Status), -- Prevent a student from having multiple active rooms
+    -- Removed UNIQUE(StudentID, Status) to allow history
     FOREIGN KEY (HostelID) REFERENCES Hostels(HostelID),
     FOREIGN KEY (StudentID) REFERENCES Students(StudentID)
 ) ENGINE=InnoDB;

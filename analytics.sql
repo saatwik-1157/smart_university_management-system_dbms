@@ -82,12 +82,12 @@ DELIMITER ;
 -- Automatically marks a student as 'Paid' if they have a scholarship (simulated logic)
 DELIMITER //
 
-CREATE TRIGGER AfterPaymentInsert
-AFTER INSERT ON Payments
+CREATE TRIGGER BeforePaymentInsert
+BEFORE INSERT ON Payments
 FOR EACH ROW
 BEGIN
     IF NEW.PaymentMethod = 'Scholarship' THEN
-        UPDATE Payments SET Status = 'Paid' WHERE PaymentID = NEW.PaymentID;
+        SET NEW.Status = 'Paid';
     END IF;
 END //
 
@@ -147,8 +147,8 @@ DELIMITER ;
 -- 9. TRIGGER: Manage Book Inventory (Return)
 DELIMITER //
 
-CREATE TRIGGER AfterBookReturn
-AFTER UPDATE ON LibraryLoans
+CREATE TRIGGER BeforeBookReturn
+BEFORE UPDATE ON LibraryLoans
 FOR EACH ROW
 BEGIN
     -- If the book was just returned (ReturnDate changed from NULL to a date)
@@ -159,9 +159,7 @@ BEGIN
         
         -- Logic for Fine Calculation (e.g., $1 per day late)
         IF NEW.ReturnDate > NEW.DueDate THEN
-            UPDATE LibraryLoans 
-            SET FineAmount = DATEDIFF(NEW.ReturnDate, NEW.DueDate) * 1.00
-            WHERE LoanID = NEW.LoanID;
+            SET NEW.FineAmount = DATEDIFF(NEW.ReturnDate, NEW.DueDate) * 1.00;
         END IF;
     END IF;
 END //
